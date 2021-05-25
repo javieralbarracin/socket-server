@@ -6,6 +6,7 @@ import http from 'http';
 import * as socket from '../sockets/socket';
 
 export default class Server{
+    
     private static _instance:Server;
 
     public app: express.Application;
@@ -36,16 +37,19 @@ export default class Server{
         this.io.on('connection', cliente =>{
 
             // Conectar cliente
-            socket.conectarCliente(cliente);
+            socket.conectarCliente( cliente);
             
             // Config Usuarios
             socket.configurarUsuario( cliente, this.io );
+
+            // Obtener Usuarios Activos
+            socket.obtenerUsuarios( cliente, this.io );
 
             // Mensajes
             socket.mensaje( cliente, this.io );
 
             // Desconectar
-            socket.desconectar( cliente );
+            socket.desconectar( cliente, this.io );
         })
 
     }
