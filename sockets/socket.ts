@@ -23,6 +23,9 @@ export const conectarCliente = (client: Socket) =>{
    
 }
 
+// Grafica
+
+
 // Mensajes
 export const mensaje = ( cliente:Socket, io: socketIO.Server) =>{
 
