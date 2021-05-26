@@ -1,25 +1,76 @@
 import { Router, Request, Response } from "express";
 import Server from '../classes/server';
 import { Socket } from 'socket.io';
-import { usuariosConectados } from '../sockets/socket';
+import { mapa, usuariosConectados } from '../sockets/socket';
 import { GraficaData } from '../classes/grafica';
+import { EncuentaData } from '../classes/encuesta';
+import { Mapa } from "../classes/mapa";
 
 
 export const router = Router();
+// ============== Gestion de Marcadores para el mapa ===========
 
+router.get('/mapa', (req: Request, res: Response)=>{
+    res.json( mapa.getMarcadores() )
+})
+// Modificacion de Grafica y envio del cambio a los usuarios conectados
+// router.post('/mapa', (req: Request, res: Response)=>{
+
+//     const opcion = Number(req.body.opcion);
+//     const unidades = Number(req.body.unidades);
+
+//     grafica.incrementarValores( opcion, unidades );
+
+//     const server = Server.instance;
+//     server.io.emit('cambio-grafica', grafica.getDataGrafica())
+
+//     res.json( grafica.getDataGrafica())
+
+// })
+// ============== FIN Gestion de Marcadores para el mapa ===========
+
+
+
+// ============== Gestion de Encuesta
+/***
+ * Estos metodos no hacen falta ya que se reutilizó el metodo de grafica
+ * con la clase grafica.
+ * 
+ */
+
+// const encuesta = new EncuentaData();
+// // Obtencion de encuesta
+// router.get('/encuesta', (req: Request, res: Response)=>{
+//     res.json( encuesta.getDataEncuestas() )
+// })
+// Modificacion de Encuesta y envio del cambio a los usuarios conectados
+// router.post('/encuesta', (req: Request, res: Response)=>{
+
+//     const nroPregunta = Number(req.body.nroPregunta);
+//     const unidades = req.body.unidades;
+
+//     encuesta.incrementarValores( nroPregunta, Number(unidades) );
+
+//     const server = Server.instance;
+//     server.io.emit('cambio-encuesta', encuesta.getDataEncuestas())
+
+//     res.json( encuesta.getDataEncuestas())
+
+// })
+// ============== FIN Gestion de Encuesta ===================
+
+// ============== Gestion de Grafica ========================
 const grafica = new GraficaData();
-
-// Obtencion de Grafica
 router.get('/grafica', (req: Request, res: Response)=>{
     res.json( grafica.getDataGrafica() )
 })
 // Modificacion de Grafica y envio del cambio a los usuarios conectados
 router.post('/grafica', (req: Request, res: Response)=>{
 
-    const mes = req.body.mes;
-    const unidades = req.body.unidades;
+    const opcion = Number(req.body.opcion);
+    const unidades = Number(req.body.unidades);
 
-    grafica.incrementarValores( mes, Number(unidades) );
+    grafica.incrementarValores( opcion, unidades );
 
     const server = Server.instance;
     server.io.emit('cambio-grafica', grafica.getDataGrafica())
@@ -27,7 +78,7 @@ router.post('/grafica', (req: Request, res: Response)=>{
     res.json( grafica.getDataGrafica())
 
 })
-
+// ============== FIN Gestion de Grafica ========================
 router.post('/mensajes', (req: Request, res: Response)=>{
     const cuerpo= req.body.cuerpo;
     const de = req.body.de;
